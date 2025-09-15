@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    double mark = 0.0;
+    int length, prec;
+    length = 12;
+    prec = 3;
+    scanf("%lf", &mark);
+    printf("You entered I%*.*lfI", length, prec, mark);
+    if (mark >=60)
+        printf("\nExam passed");
+    else
+        printf("\nExam failed");
+}
