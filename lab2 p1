@@ -1,22 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <math.h>    // Підключає бібліотеку для математичних функцій (pow, fabs, cos, sin, sqrt)
 
 int main()
 {
     double x, y;
     printf("Enter x:");
     scanf("%lf", &x);
-    if (x>=-12 && x<-8)
-        y = pow(2,(abs(x)+1));
+    if (x>=-12 && x<-8)       // Перша умова: якщо x знаходиться в інтервалі [-12; -8)
+        y = pow(2,(abs(x)+1));   // Обчислюємо y = 2^(|x|+1)
 
-    else if (x>=-3 && x<3)
-        y = (fabs(cos(x))+x)/(sin(x)+1);
+    else if (x>=-3 && x<3)      // Друга умова: якщо x знаходиться в інтервалі [-3; 3)
+        y = (fabs(cos(x))+x)/(sin(x)+1);  // Формула: (|cos(x)| + x) / (sin(x)+1)
 
-    else if (x>=10 && x<200)
-        y = 4*x+sqrt(x*x*x-2*x);
-    else
-        y = 0.008;
+    else if (x>=10 && x<200)    // Третя умова: якщо x знаходиться в інтервалі [10; 200)
+        y = 4*x+sqrt(x*x*x-2*x);  // Формула: 4x + √(x³ – 2x)
+    else // Якщо жодна з умов не виконалася
+        y = 0.008;   // Присвоюємо константне значення y
 
     system("cls");
     printf("x = %lf", x);
