@@ -1,24 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <conio.h> // Ïîòğ³áíî äëÿ ôóíêö³¿ getch()
+#include <conio.h> // ĞŸĞ¾Ñ‚Ñ€Ñ–Ğ±Ğ½Ğ¾ Ğ´Ğ»Ñ Ñ„ÑƒĞ½ĞºÑ†Ñ–Ñ— getch()
 
-// --- Ïğîòîòèïè ôóíêö³é ---
+// --- ĞŸÑ€Ğ¾Ñ‚Ğ¾Ñ‚Ğ¸Ğ¿Ğ¸ Ñ„ÑƒĞ½ĞºÑ†Ñ–Ğ¹ ---
 double function(double x);
 void printTable(double X1, unsigned int N, double step);
 void print_table_header();
 void print_table_line();
 
-// --- Ãîëîâíà ôóíêö³ÿ ïğîãğàìè (ç âàë³äàö³ºş) ---
+// --- Ğ“Ğ¾Ğ»Ğ¾Ğ²Ğ½Ğ° Ñ„ÑƒĞ½ĞºÑ†Ñ–Ñ Ğ¿Ñ€Ğ¾Ğ³Ñ€Ğ°Ğ¼Ğ¸ (Ğ· Ğ²Ğ°Ğ»Ñ–Ğ´Ğ°Ñ†Ñ–Ñ”Ñ) ---
 int main()
 {
-    // Îãîëîøåííÿ çì³ííèõ
+    // ĞĞ³Ğ¾Ğ»Ğ¾ÑˆĞµĞ½Ğ½Ñ Ğ·Ğ¼Ñ–Ğ½Ğ½Ğ¸Ñ…
     double X1, X2, delta;
     unsigned int N;
     int temp;
     int variant;
 
-    // --- ÊĞÎÊ 1: ÂÂÅÄÅÍÍß ÒÀ ÂÀË²ÄÀÖ²ß ÄÀÍÈÕ ---
+    // --- ĞšĞ ĞĞš 1: Ğ’Ğ’Ğ•Ğ”Ğ•ĞĞĞ¯ Ğ¢Ğ Ğ’ĞĞ›Ğ†Ğ”ĞĞ¦Ğ†Ğ¯ Ğ”ĞĞĞ˜Ğ¥ ---
     printf("Enter variant (1 or 2): ");
     scanf("%d", &variant);
     while(variant != 1 && variant != 2)
@@ -30,7 +30,7 @@ int main()
 
     printf("\nEnter X1: ");
     scanf("%lf", &X1);
-
+    
     do {
         printf("\nEnter X2 (must be > X1): ");
         scanf("%lf", &X2);
@@ -64,29 +64,29 @@ int main()
         N = (unsigned int)((X2 - X1) / delta) + 1;
     }
 
-    // --- ÊĞÎÊ 2: ÂÈÊËÈÊ ÔÓÍÊÖ²¯ ÄËß ÄĞÓÊÓ ÒÀÁËÈÖ² ---
+    // --- ĞšĞ ĞĞš 2: Ğ’Ğ˜ĞšĞ›Ğ˜Ğš Ğ¤Ğ£ĞĞšĞ¦Ğ†Ğ‡ Ğ”Ğ›Ğ¯ Ğ”Ğ Ğ£ĞšĞ£ Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ† ---
     printTable(X1, N, delta);
 
     return 0;
 }
 
 
-// --- Ğåàë³çàö³ÿ ôóíêö³é ---
+// --- Ğ ĞµĞ°Ğ»Ñ–Ğ·Ğ°Ñ†Ñ–Ñ Ñ„ÑƒĞ½ĞºÑ†Ñ–Ğ¹ ---
 
-// ĞÅÀË²ÇÀÖ²ß ÔÓÍÊÖ²¯ ÄËß ÂÀĞ²ÀÍÒÓ 15
+// Ğ Ğ•ĞĞ›Ğ†Ğ—ĞĞ¦Ğ†Ğ¯ Ğ¤Ğ£ĞĞšĞ¦Ğ†Ğ‡ Ğ”Ğ›Ğ¯ Ğ’ĞĞ Ğ†ĞĞĞ¢Ğ£ 15
 // f(x) = 2(x-1000)^3 - 3(x+500)^2 + 4x - 5
 double function(double x) {
     return 2.0 * pow(x - 1000.0, 3) - 3.0 * pow(x + 500.0, 2) + 4.0 * x - 5.0;
 }
 
-// Ôóíêö³ÿ äëÿ ğîçğàõóíêó òà âèâîäó òàáëèö³
+// Ğ¤ÑƒĞ½ĞºÑ†Ñ–Ñ Ğ´Ğ»Ñ Ñ€Ğ¾Ğ·Ñ€Ğ°Ñ…ÑƒĞ½ĞºÑƒ Ñ‚Ğ° Ğ²Ğ¸Ğ²Ğ¾Ğ´Ñƒ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñ–
 void printTable(double X1, unsigned int N, double step) {
     unsigned int i;
     double x, fx, prev_fx = 0.0;
-
+    
     unsigned int displayedLines = 0;
     const int maxLinesPerScreen = 20;
-
+    
     printf("\n\n--- Calculation parameters ---\n");
     printf("Start X: %.4f\n", X1);
     printf("Points:  %u\n", N);
@@ -109,7 +109,7 @@ void printTable(double X1, unsigned int N, double step) {
         }
         prev_fx = fx;
 
-        // Ïàã³íàö³ÿ (âåğñ³ÿ áåç ğîçğèâó òàáëèö³)
+        // ĞŸĞ°Ğ³Ñ–Ğ½Ğ°Ñ†Ñ–Ñ (Ğ²ĞµÑ€ÑÑ–Ñ Ğ±ĞµĞ· Ñ€Ğ¾Ğ·Ñ€Ğ¸Ğ²Ñƒ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñ–)
         if (displayedLines >= maxLinesPerScreen && i < N - 1) {
             print_table_line();
             printf("Press any key to continue...\n");
@@ -121,7 +121,7 @@ void printTable(double X1, unsigned int N, double step) {
 }
 
 
-// Ôóíêö³¿ äëÿ ìàëşâàííÿ òàáëèö³ ïñåâäîãğàô³êîş (äëÿ âàğ³àíòó 15)
+// Ğ¤ÑƒĞ½ĞºÑ†Ñ–Ñ— Ğ´Ğ»Ñ Ğ¼Ğ°Ğ»ÑĞ²Ğ°Ğ½Ğ½Ñ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ†Ñ– Ğ¿ÑĞµĞ²Ğ´Ğ¾Ğ³Ñ€Ğ°Ñ„Ñ–ĞºĞ¾Ñ (Ğ´Ğ»Ñ Ğ²Ğ°Ñ€Ñ–Ğ°Ğ½Ñ‚Ñƒ 15)
 void print_table_header() {
     print_table_line();
     printf("| %-5s | %-26s | %-23s |\n", "N", "X", "F(X)");
