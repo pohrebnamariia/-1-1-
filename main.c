@@ -82,7 +82,7 @@ double function(double x) {
 // Функція для розрахунку та виводу таблиці
 void printTable(double X1, unsigned int N, double step) {
     unsigned int i;
-    double x, fx, prev_fx = 0.0;
+    double x, fx, prev_fx = 0.0;    // Оголошуємо змінні: поточний 'x', поточне значення f(x), попереднє значення f(x).
     
     unsigned int displayedLines = 0;
     const int maxLinesPerScreen = 20;
@@ -94,22 +94,22 @@ void printTable(double X1, unsigned int N, double step) {
 
     print_table_header();
 
-    for (i = 0; i < N; i++) {
+    for (i = 0; i < N; i++) { // інціалізація, умова, інкремент
         x = X1 + i * step;
         fx = function(x);
 
         printf("| %-5u | %-26.4f | %-23.4f |\n", i + 1, x, fx);
         displayedLines++;
 
-        if (i > 0 && fx * prev_fx < 0) {
+        if (i > 0 && fx * prev_fx < 0) {      // Перевіряємо, чи змінився знак функції (якщо це не перша точка).
             print_table_line();
             printf("!!! Attention: Function changed sign on the interval [%.4f, %.4f] !!!\n", x - step, x);
             print_table_line();
             displayedLines += 3;
         }
-        prev_fx = fx;
+        prev_fx = fx;   // Зберігаємо поточне значення 'fx' для наступної ітерації.
 
-        // Пагінація (версія без розриву таблиці)
+        // Пагінація (перевірка, чи потрібно зробити паузу)
         if (displayedLines >= maxLinesPerScreen && i < N - 1) {
             print_table_line();
             printf("Press any key to continue...\n");
@@ -121,7 +121,7 @@ void printTable(double X1, unsigned int N, double step) {
 }
 
 
-// Функції для малювання таблиці псевдографікою (для варіанту 15)
+// Функції для малювання таблиці 
 void print_table_header() {
     print_table_line();
     printf("| %-5s | %-26s | %-23s |\n", "N", "X", "F(X)");
@@ -131,3 +131,4 @@ void print_table_header() {
 void print_table_line() {
     printf("+-------+----------------------------+-------------------------+\n");
 }
+
