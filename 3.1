@@ -1,0 +1,168 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <conio.h>
+#include <string.h>
+
+#define TEXT "Press any key to continue..."
+#define M 20
+
+// ширини стовпців таблиці
+#define WIDTH1 4
+#define WIDTH2 10
+#define WIDTH3 14
+#define WIDTH4 14
+#define WIDTH5 14
+
+// --- Прототипи функцій ---
+void print_Header(void);
+void table(double Xmin, double Xmax, unsigned int Points, double Step);
+double f(double x);              // f(x)
+double deriv1(double x);         // аналітична похідна
+double deriv_v2(double x, double Step); // чисельна похідна
+
+
+// =================================================================
+//                            MAIN
+// =================================================================
+int main()
+{
+    double X1, X2, delta;
+    unsigned int N;
+    int temp;
+    int variant; // 1 - X1, X2, N ; 2 - X1, X2, delta
+
+    printf("Enter variant (1 or 2): ");
+    scanf("%d", &variant);
+
+    while (variant != 1 && variant != 2)
+    {
+        printf("\nVariant must be 1 or 2");
+        printf("\nEnter variant: ");
+        scanf("%d", &variant);
+    }
+
+    printf("\nX1: ");
+    scanf("%lf", &X1);
+
+    printf("\nX2 (X2 > X1): ");
+    scanf("%lf", &X2);
+
+    while (X2 <= X1)
+    {
+        printf("\nError: X2 must be greater than X1.");
+        printf("\nTry again.");
+        printf("\n\nEnter X1: ");
+        scanf("%lf", &X1);
+        printf("\nX2: ");
+        scanf("%lf", &X2);
+    }
+
+    if (variant == 1)
+    {
+        printf("\n\nEnter N (number of points >= 2): ");
+        scanf("%d", &temp);
+
+        while (temp <= 1)
+        {
+            printf("\nError: N must be >= 2");
+            printf("\nEnter N again: ");
+            scanf("%d", &temp);
+        }
+        N = (unsigned int)temp;
+        delta = (X2 - X1) / ((double)(N - 1));
+    }
+    else
+    {
+        do
+        {
+            printf("\nEnter delta (step > 0): ");
+            scanf("%lf", &delta);
+            if (delta <= 0)
+                printf("\nError: delta must be positive.\n");
+        } while (delta <= 0);
+
+        N = (unsigned int)((X2 - X1) / delta + 1);
+    }
+
+    // --- Вивід параметрів ---
+    printf("\n\nCalculation parameters:\n");
+    printf("X1 = %.3lf\nX2 = %.3lf\nDelta = %.3lf\nPoints = %u\n\n",
+           X1, X2, delta, N);
+
+    print_Header();
+    table(X1, X2, N, delta);
+
+    printf("\nProgram finished successfully.\n");
+    return 0;
+}
+
+// =================================================================
+//                          FUNCTIONS
+// =================================================================
+
+// --- Функція шапки таблиці ---
+void print_Header(void)
+{
+    printf("+-------+------------+--------------+--------------+--------------+\n");
+    printf("|   N   |     X      |     F(X)     |  F'(x) exact | F'(x) numeric |\n");
+    printf("+-------+------------+--------------+--------------+--------------+\n");
+}
+
+// --- Основна таблиця ---
+void table(double Xmin, double Xmax, unsigned int Points, double Step)
+{
+    double x, fx, df1, df2, prev_fx = 0.0;
+    unsigned int n;
+    int length = strlen(TEXT);
+
+    for (n = 1, x = Xmin; n <= Points; n++, x += Step)
+    {
+        fx = f(x);
+        df1 = deriv1(x);
+        df2 = deriv_v2(x, Step);
+
+        printf("| %5u | %10.3lf | %12.4lf | %12.4lf | %12.4lf |\n",
+               n, x, fx, df1, df2);
+
+        // --- Пошук проміжку ізоляції ---
+        if (n > 1 && fx * prev_fx < 0)
+        {
+            printf("+-------+------------+--------------+--------------+--------------+\n");
+            printf("Function changed sign on [%.4lf; %.4lf] --> possible root.\n", x - Step, x);
+            printf("+-------+------------+--------------+--------------+--------------+\n");
+        }
+
+        prev_fx = fx;
+
+        // --- Пауза кожні 10 рядків ---
+        if (n % 10 == 0 && n < Points)
+        {
+            printf("%s", TEXT);
+            getch();
+            for (int t = 0; t < length; t++)
+                printf("\b \b");
+        }
+    }
+
+    printf("+-------+------------+--------------+--------------+--------------+\n");
+}
+
+// --- Твоя функція f(x) ---
+double f(double x)
+{
+    return 2.0 * pow(x - 1000.0, 3) - 3.0 * pow(x + 500.0, 2) + 4.0 * x - 5.0;
+}
+
+// --- Аналітична похідна ---
+double deriv1(double x)
+{
+    // f'(x) = 6*(x - 1000)^2 - 6*(x + 500) + 4
+    return 6.0 * pow(x - 1000.0, 2) - 6.0 * (x + 500.0) + 4.0;
+}
+
+// --- Чисельна похідна ---
+double deriv_v2(double x, double step)
+{
+    return (f(x + step) - f(x)) / step;
+}
