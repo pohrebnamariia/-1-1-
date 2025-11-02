@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <conio.h>
+#include <string.h>
+
+#define TEXT "Press any key to continue..."
+
+
+// --- Прототипи функцій ---
+void print_Header(void);
+void table(double X1, double X2, unsigned int N, double Step);
+double f(double x);
+double deriv1(double x);
+double deriv_v2(double x, double Step);
+
+// =================================================================
+// MAIN
+// =================================================================
+int main()
+{
+    double X1, X2, delta;
+    unsigned int N;
+    int temp;
+    int variant;
+
+    printf("Enter variant (1 or 2): ");
+    scanf("%d", &variant);
+
+    while (variant != 1 && variant != 2)
+    {
+        printf("\nVariant must be 1 or 2: ");
+        scanf("%d", &variant);
+    }
+
+    printf("\nEnter X1: ");
+    scanf("%lf", &X1);
+
+    printf("Enter X2 (X2 > X1): ");
+    scanf("%lf", &X2);
+    while (X2 <= X1)
+    {
+        printf("Error! X2 must be greater than X1.\nTry again.\n");
+        printf("Enter X2: ");
+        scanf("%lf", &X2);
+    }
+
+    if (variant == 1)
+    {
+        printf("Enter N (>=2): ");
+        scanf("%d", &temp);
+        while (temp <= 1)
+        {
+            printf("N must be >= 2. Enter again: ");
+            scanf("%d", &temp);
+        }
+        N = (unsigned int)temp;
+        delta = (X2 - X1) / ((double)(N - 1));
+    }
+    else
+    {
+        do {
+            printf("Enter delta (>0): ");
+            scanf("%lf", &delta);
+            if (delta <= 0) printf("Error: must be positive.\n");
+        } while (delta <= 0);
+        N = (unsigned int)((X2 - X1) / delta + 1);
+    }
+
+    print_Header();
+    table(X1, X2, N, delta);
+
+    printf("\nProgram finished successfully.\n");
+    return 0;
+}
+
+// =================================================================
+// FUNCTIONS
+// =================================================================
+
+void print_Header(void)
+{
+    printf("+-------+--------------+--------------+--------------+--------------+\n");
+    printf("|   N   |      X       |     f(x)     |  f'(x) ana.  | f'(x) num.  |\n");
+    printf("+-------+--------------+--------------+--------------+--------------+\n");
+}
+
+void table(double X1, double X2, unsigned int N, double Step)
+{
+    double x, fx, prev_fx = 0;
+    unsigned int n;
+    int length = strlen(TEXT);
+
+    for (n = 1, x = X1; n <= N; n++, x += Step)
+    {
+        fx = f(x);
+        double d1 = deriv1(x);
+        double d2 = deriv_v2(x, Step);
+
+        printf("| %5u | %12.4lf | %12.4lf | %12.4lf | %12.4lf |\n",
+               n, x, fx, d1, d2);
+
+        if (n % 10 == 0 && n < N)
+        {
+            printf("%s\r", TEXT);
+            getch();
+            for (int temp = 0; temp < length; temp++) printf(" ");
+            printf("\r");
+        }
+    }
+
+    printf("+-------+--------------+--------------+--------------+--------------+\n");
+}
+
+// --- Функція f(x) ---
+double f(double x)
+{
+    return 2 * pow(x - 1000, 3) - 3 * pow(x + 500, 2) + 4 * x - 5;
+}
+
+// --- Аналітична похідна ---
+double deriv1(double x)
+{
+    return 6 * pow(x - 1000, 2) - 6 * (x + 500) + 4;
+}
+
+// --- Чисельна похідна ---
+double deriv_v2(double x, double step)
+{
+    return (f(x + step) - f(x)) / step;
+}
