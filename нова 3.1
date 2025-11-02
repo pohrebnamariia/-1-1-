@@ -66,7 +66,14 @@ int main()
         } while (delta <= 0);
         N = (unsigned int)((X2 - X1) / delta + 1);
     }
-
+    
+    
+// --- Вивід параметрів ---
+    printf("\n\nCalculation parameters:\n");
+    printf("X1 = %.3lf\nX2 = %.3lf\nDelta = %.3lf\nPoints = %u\n\n",
+           X1, X2, delta, N);
+           
+           
     print_Header();
     table(X1, X2, N, delta);
 
