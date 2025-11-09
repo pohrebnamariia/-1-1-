@@ -2,7 +2,6 @@
 #include <stdlib.h>  // для exit()
 #include <math.h>    // для fabs()
 
-#define eps 0.001     // допустима похибка
 
 /*
    Прототипи функцій
@@ -19,7 +18,7 @@ int get_n(void);                            // введення кількост
 
 int main()
 {
-    double a, b, I, I1, I2; // змінні для меж інтегрування і результатів обчислень
+    double a, b, I, I1, I2, eps; // змінні для меж інтегрування і результатів обчислень
     int n, N;               // n — початкова кількість проміжків; N — змінюється в циклі уточнення
     int variant;            // вибір методу інтегрування
 
@@ -29,6 +28,13 @@ int main()
     a = get_a();   // введення нижньої межі
     b = get_b(a);  // введення верхньої межі
     n = get_n();   // введення кількості поділів
+
+printf("\nEnter the calculation error (e.g., 0.0001):\neps = ");
+scanf("%lf", &eps);
+if (eps <= 0) {
+    printf("\nInvalid input: error must be positive.\n");
+    exit(1);
+}
 
     // Меню вибору методу інтегрування
     printf("\nChoose the integration method:\n");
@@ -121,6 +127,8 @@ int get_n(void)
         exit(1);
     }
     return n;
+
+
 }
 
 //--------------------------------------------------------------------------
