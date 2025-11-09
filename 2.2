@@ -1,0 +1,205 @@
+#include <stdio.h>   // бібліотека для printf, scanf
+#include <stdlib.h>  // для exit()
+#include <math.h>    // для fabs()
+
+#define eps 0.001     // допустима похибка
+
+/*
+   Прототипи функцій
+*/
+double leftR(double a, double b, int n);    // метод лівих прямокутників
+double rightR(double a, double b, int n);   // метод правих прямокутників
+double trapez(double a, double b, int n);   // метод трапецій
+double simpson(double a, double b, int n);  // метод парабол (Сімпсона)
+double f(double x);                         // підінтегральна функція
+double get_a(void);                         // введення нижньої межі a
+double get_b(double a);                     // введення верхньої межі b
+int get_n(void);                            // введення кількості поділів n
+
+
+int main()
+{
+    double a, b, I, I1, I2; // змінні для меж інтегрування і результатів обчислень
+    int n, N;               // n — початкова кількість проміжків; N — змінюється в циклі уточнення
+    int variant;            // вибір методу інтегрування
+
+    printf("Definite Integral Calculation\n");
+    printf("----------------------------------\n");
+
+    a = get_a();   // введення нижньої межі
+    b = get_b(a);  // введення верхньої межі
+    n = get_n();   // введення кількості поділів
+
+    // Меню вибору методу інтегрування
+    printf("\nChoose the integration method:\n");
+    printf("1 - Left rectangles\n");
+    printf("2 - Right rectangles\n");
+    printf("3 - Trapezoidal rule\n");
+    printf("4 - Parabolas (Simpson's rule)\n");
+    printf("Your choice: ");
+    scanf("%d", &variant);  // вводимо номер методу
+
+    // Вибір методу
+    switch (variant) {
+        case 1: I = leftR(a, b, n); break;
+        case 2: I = rightR(a, b, n); break;
+        case 3: I = trapez(a, b, n); break;
+        case 4: I = simpson(a, b, n); break;
+        default:
+            printf("Invalid choice!\n");
+            exit(1);
+    }
+
+    // Виводимо початкове наближення інтеграла
+    printf("\nInitial approximation: I = %.10lf\n", I);
+
+    // --- уточнення результату ---
+    N = n;  // початкове значення кількості проміжків
+    do {
+        N = N + 2;  // збільшуємо кількість поділів на 2
+        // обчислюємо інтеграл двічі, для N і N+2
+        switch (variant) {
+            case 1:
+                I1 = leftR(a, b, N);
+                I2 = leftR(a, b, N + 2);
+                break;
+            case 2:
+                I1 = rightR(a, b, N);
+                I2 = rightR(a, b, N + 2);
+                break;
+            case 3:
+                I1 = trapez(a, b, N);
+                I2 = trapez(a, b, N + 2);
+                break;
+            case 4:
+                I1 = simpson(a, b, N);
+                I2 = simpson(a, b, N + 2);
+                break;
+        }
+        // повторюємо поки різниця більша за eps
+    } while (fabs(I2 - I1) > eps);
+
+    // фінальний результат
+    printf("\nRefined result:\n");
+    printf("I = %.10lf at N = %d, |I2 - I1| = %.10lf\n", I2, N, fabs(I2 - I1));
+
+    return 0;
+}
+
+// ----------------  Опис функцій -----------------------------
+
+// введення нижньої межі
+double get_a(void)
+{
+    double a;
+    printf("\na = ");
+    scanf("%lf", &a);
+    return a;
+}
+
+// введення верхньої межі
+double get_b(double a)
+{
+    double b;
+    printf("\nb = ");
+    scanf("%lf", &b);
+    if (b <= a) {          // перевірка, щоб верхня межа була більша за нижню
+        printf("\nInvalid input: b must be greater than a.\n");
+        exit(1);
+    }
+    return b;
+}
+
+// введення кількості поділів
+int get_n(void)
+{
+    int n;
+    printf("\nn = ");
+    scanf("%d", &n);
+    if (n <= 1) {
+        printf("\nInvalid input: n must be greater than 1.\n");
+        exit(1);
+    }
+    return n;
+}
+
+//--------------------------------------------------------------------------
+
+// підінтегральна функція
+double f(double x)
+{
+    // приклад із твого варіанта: f(x) = 1 / (2x^2 + 3x - 2)
+    return 1.0 / (2.0*x*x + 3.0*x - 2.0);
+}
+
+//--------------------------------------------------------------------------
+
+// метод лівих прямокутників
+double leftR(double a, double b, int n)
+{
+    double h = (b - a) / n;  // крок
+    double sum = 0;
+    double x = a;
+
+    while (x <= b - h) {
+        sum = sum + f(x);    // додаємо значення в лівій точці
+        x = x + h;           // переходимо до наступного
+    }
+
+    return h * sum;
+}
+
+//--------------------------------------------------------------------------
+
+// метод правих прямокутників
+double rightR(double a, double b, int n)
+{
+    double h = (b - a) / n;
+    double sum = 0;
+    double x = a + h;
+
+    while (x <= b) {
+        sum = sum + f(x);    // додаємо значення в правій точці
+        x = x + h;
+    }
+
+    return h * sum;
+}
+
+//--------------------------------------------------------------------------
+
+// метод трапецій
+double trapez(double a, double b, int n)
+{
+    double h = (b - a) / n;
+    double sum = 0.5 * (f(a) + f(b)); // перші та останні точки з коеф. 1/2
+    double x = a + h;
+
+    while (x < b) {
+        sum = sum + f(x);
+        x = x + h;
+    }
+
+    return h * sum;
+}
+
+//--------------------------------------------------------------------------
+
+// метод Сімпсона (парабол)
+double simpson(double a, double b, int n)
+{
+    if (n % 2 != 0) n++;     // якщо n непарне — збільшуємо на 1
+    double h = (b - a) / n;
+    double sum1 = 0, sum2 = 0;
+    double x;
+
+    for (int i = 1; i < n; i++) {
+        x = a + i*h;
+        if (i % 2 == 0)
+            sum2 += f(x);    // парні індекси
+        else
+            sum1 += f(x);    // непарні індекси
+    }
+
+    return (h/3.0) * (f(a) + f(b) + 4.0*sum1 + 2.0*sum2);
+}
