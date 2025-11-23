@@ -1,0 +1,161 @@
+#include <stdio.h>      // Підключення бібліотеки стандартного вводу/виводу
+#include <stdlib.h>     // Підключення бібліотеки для роботи з пам’яттю (malloc, calloc, free)
+
+
+// --------------------------------- ПРОТОТИПИ ФУНКЦІЙ ----------------------------------------
+
+// Оголошення функції заповнення масиву цілих
+void fill_int_array(unsigned int * uiptr, unsigned int size_of_array);
+
+// Оголошення функції заповнення масиву дробових
+void fill_float_array(float * fptr, unsigned int size_of_array);
+
+// Оголошення функції друку масиву цілих
+void print_int_array(const unsigned int * uiptr, unsigned int size_of_array);
+
+// Оголошення функції друку масиву дробових
+void print_float_array(const float * fptr, unsigned int size_of_array);
+
+// Оголошення функції обчислення середнього значення елементів масиву A
+double mean_value(const unsigned int * A, unsigned int Size);
+
+// Оголошення функції пошуку мінімального значення в масиві A
+unsigned int find_min(const unsigned int * A, unsigned int Size);
+
+// Оголошення функції пошуку максимального значення в масиві B
+float find_max(const float * B, unsigned int Size);
+
+
+// ---------------------------- ГОЛОВНА ФУНКЦІЯ MAIN ----------------------------------------
+int main()
+{
+    unsigned int * A;      // Вказівник для масиву типу unsigned int
+    float * B;             // Вказівник для масиву типу float
+    unsigned int Size;     // Змінна для розміру масивів
+
+    // Змінні для результатів
+    double average_val;    // Для збереження середнього значення масиву A
+    unsigned int min_val;  // Для збереження мінімального елемента масиву A
+    float max_val;         // Для збереження максимального елемента масиву B
+
+    printf("Enter size of array: ");   // Виведення запиту до користувача
+    scanf("%u", &Size);                // Зчитування розміру масиву
+
+    // 1. Виділення пам'яті
+    A = (unsigned int *) calloc(Size, sizeof(unsigned int));  // Виділення пам’яті під масив A + автоматичне занулення
+
+    B = (float *) malloc(Size * sizeof(float));               // Виділення пам’яті під масив B без занулення
+
+    // Перевірка, чи виділилася пам’ять
+    if (A == NULL || B == NULL) {       // Якщо хоча б один масив не виділився
+        printf("Memory has not been allocated");  // Вивести повідомлення
+        exit(0);                        // Завершити програму
+    }
+
+    // 2. Автоматичне заповнення масивів
+    fill_int_array(A, Size);            // Заповнити масив A формулою A[j] = Size - (j + 1)
+    fill_float_array(B, Size);          // Заповнити масив B формулою B[j] = 5*j + 5
+
+    // 3. Виведення масивів на екран
+    print_int_array(A, Size);           // Друк масиву A
+    print_float_array(B, Size);         // Друк масиву B
+
+    // 4. Розрахунки
+    average_val = mean_value(A, Size);  // Середнє значення елементів A
+    min_val = find_min(A, Size);        // Мінімальне значення A
+    max_val = find_max(B, Size);        // Максимальне значення B
+
+    // 5. Виведення результатів
+    printf("\n\n--- RESULTS ---\n");               // Вивід заголовку результатів
+    printf("Average value (Array A): %.2f\n", average_val);  // Вивід середнього значення
+    printf("Minimum value (Array A): %u\n", min_val);        // Вивід мінімуму
+    printf("Maximum value (Array B): %.2f\n", max_val);      // Вивід максимуму
+
+    // 6. Звільнення пам’яті
+    free(A);                        // Звільнення пам’яті масиву A
+    free(B);                        // Звільнення пам’яті масиву B
+
+    return 0;                       // Повернення 0 — успішне завершення програми
+}
+
+
+// ---------------------------------------- ОПИС ФУНКЦІЙ ----------------------------------------
+
+// Функція заповнення масиву A за формулою A[j] = Size - (j + 1)
+void fill_int_array(unsigned int * A, unsigned int Size)
+{
+    unsigned int j;                  // Лічильник циклу
+    for (j = 0; j < Size; j++) {     // Проходження по всіх елементах
+        A[j] = Size - (j + 1);       // Запис формули у масив
+    }
+}
+
+// Функція заповнення масиву B за формулою B[j] = 5*j + 5
+void fill_float_array(float * B, unsigned int Size)
+{
+    unsigned int j;                  // Лічильник
+    for (j = 0; j < Size; j++) {     // Цикл для проходження всіх елементів
+        B[j] = 5.0 * j + 5.0;        // Обчислення значення за формулою
+    }
+}
+
+// Друк масиву A у консоль
+void print_int_array(const unsigned int * A, unsigned int Size)
+{
+    unsigned int j;                  // Лічильник
+    printf("\n\nArray A (unsigned int):\n");   // Заголовок
+    for (j = 0; j < Size; j++) {     // Проходження масиву
+        printf("%5u", A[j]);         // Друк елемента з відступом
+    }
+}
+
+// Друк масиву B
+void print_float_array(const float * B, unsigned int Size)
+{
+    unsigned int j;                   // Лічильник
+    printf("\n\nArray B (float):\n"); // Заголовок
+    for (j = 0; j < Size; j++) {      // Проходження елементів масиву
+        printf("%8.2f", B[j]);        // Виведення у форматі з 2 знаками після коми
+    }
+}
+
+// Обчислення середнього значення масиву A
+double mean_value(const unsigned int * A, unsigned int Size)
+{
+    unsigned int j;                  // Лічильник
+    double sum = 0.0;                // Змінна для суми
+
+    for (j = 0; j < Size; j++) {     // Обхід масиву
+        sum += A[j];                 // Додавання кожного елемента
+    }
+
+    return sum / (double)Size;       // Повернення середнього
+}
+
+// Пошук мінімального значення у масиві A
+unsigned int find_min(const unsigned int * A, unsigned int Size)
+{
+    unsigned int j;                  // Лічильник
+    unsigned int min = A[0];         // Ініціалізація мінімуму першим елементом
+
+    for (j = 1; j < Size; j++) {     // Починаємо з другого елементу
+        if (A[j] < min) {            // Якщо знайдено менше значення —
+            min = A[j];              // — оновлюємо мінімум
+        }
+    }
+    return min;                      // Повернення мінімального
+}
+
+// Пошук максимального значення у масиві B
+float find_max(const float * B, unsigned int Size)
+{
+    unsigned int j;                  // Лічильник
+    float max = B[0];                // Початкове значення максимуму
+
+    for (j = 1; j < Size; j++) {     // Перебір решти елементів
+        if (B[j] > max) {            // Якщо знайдено більше значення —
+            max = B[j];              // — оновлюємо максимум
+        }
+    }
+    return max;                      // Повернення максимального
+}
