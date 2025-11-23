@@ -1,0 +1,273 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <math.h>
+#include <time.h>
+
+#define eps 0.01        // точність
+
+// ---------------- ПРОТОТИПИ -------------------------
+double f(double x);
+double df(double x);
+
+void get_interval(double *pX1, double *pX2);
+void get_N(int *pN);
+int get_mode(void);
+void get_variant(int *pVariant);
+
+void method_Hord(double *pRoot, double X1, double X2, int N, int debug);
+void method_Half_div(double *pRoot, double X1, double X2, int N, int debug);
+void method_Newton(double *pRoot, double X0, int N, int debug);
+
+// -----------------------------------------------------
+
+int main()
+{
+    int N, debug, variant;
+    double X1, X2, root;
+    clock_t t1, t2;
+
+    get_variant(&variant);
+    get_interval(&X1, &X2);
+    get_N(&N);
+    debug = get_mode();
+
+    t1 = clock();
+
+    switch (variant)
+    {
+    case 1:
+        method_Hord(&root, X1, X2, N, debug);
+        break;
+
+    case 2:
+        method_Half_div(&root, X1, X2, N, debug);
+        break;
+
+    case 3:
+        method_Newton(&root, X1, N, debug);
+        break;
+    }
+
+    t2 = clock();
+
+    printf("\n\nroot = %.10lf   f(root) = %.10lf", root, f(root));
+    printf("\nTime = %.5lf sec\n", (double)(t2 - t1) / CLOCKS_PER_SEC);
+
+    return 0;
+}
+
+// ------------------ f(x) ----------------------------
+
+double f(double x)
+{
+    // ТВОЯ ФУНКЦІЯ з варіанта:
+    return 2 * pow(x - 1000, 3) - 3 * pow(x + 500, 2) + 4 * x - 5;
+}
+
+double df(double x)
+{
+    // Похідна
+    return 6 * pow(x - 1000, 2) - 6 * (x + 500) + 4;
+}
+
+// ------------------ Ввід параметрів ----------------------------
+
+void get_variant(int *pVariant)
+{
+    printf("\nEnter variant:"
+           "\n1 - method Hord"
+           "\n2 - method Half Division"
+           "\n3 - method Newton"
+           "\nother - exit\n>");
+
+    scanf("%d", pVariant);
+
+    if (*pVariant < 1 || *pVariant > 3)
+    {
+        printf("Exit...");
+        getch();
+        exit(0);
+    }
+}
+
+void get_interval(double *pX1, double *pX2)
+{
+    printf("\nEnter X1 and X2 such that f(X1)*f(X2)<0\n");
+
+    do
+    {
+        printf("X1 = ");
+        scanf("%lf", pX1);
+
+        printf("X2 = ");
+        scanf("%lf", pX2);
+    } while (f(*pX1) * f(*pX2) > 0);
+}
+
+void get_N(int *pN)
+{
+    printf("\nEnter N > 0\nN=");
+    scanf("%d", pN);
+
+    if (*pN <= 0)
+    {
+        printf("Exit...");
+        getch();
+        exit(0);
+    }
+}
+
+int get_mode(void)
+{
+    int m;
+    printf("\nEnter mode: 1 - debug, 0 - no debug\n>");
+    scanf("%d", &m);
+
+    if (m == 0 || m == 1)
+        return m;
+
+    printf("Exit...");
+    getch();
+    exit(1);
+}
+
+// ------------------ Метод ХОРД ----------------------------
+
+void method_Hord(double *pRoot, double X1, double X2, int N, int debug)
+{
+    double xi;
+    int n = 0, count = 0, answer;
+
+    do
+    {
+        n++;
+        count++;
+
+        xi = (f(X2) * X1 - f(X1) * X2) / (f(X2) - f(X1));
+
+        if (f(X1) * f(xi) > 0)
+            X1 = xi;
+        else
+            X2 = xi;
+
+        if (debug)
+            printf("\nn=%d  xi=%.10lf   f(xi)=%.10lf", n, xi, f(xi));
+
+        if (count == N)
+        {
+            printf("\nReached %d iterations.", N);
+            printf("\n0-exit  1-another N iterations  2-continue to solution\n>");
+            scanf("%d", &answer);
+
+            if (answer == 0)
+            {
+                printf("\nExit...");
+                getch();
+                exit(0);
+            }
+            else if (answer == 1)
+                count = 0;
+            else if (answer == 2)
+                N = -1;
+            else
+            {
+                printf("Wrong answer. Exit.");
+                getch();
+                exit(1);
+            }
+        }
+
+    } while (fabs(f(xi)) > eps);
+
+    *pRoot = xi;
+}
+
+// ------------------ Метод ПОЛОВИННОГО ДІЛЕННЯ ----------------------------
+
+void method_Half_div(double *pRoot, double X1, double X2, int N, int debug)
+{
+    double xi;
+    int n = 0, count = 0, answer;
+
+    do
+    {
+        n++;
+        count++;
+
+        xi = (X1 + X2) / 2.0;
+
+        if (f(X1) * f(xi) > 0)
+            X1 = xi;
+        else
+            X2 = xi;
+
+        if (debug)
+            printf("\nn=%d  xi=%.10lf   f(xi)=%.10lf", n, xi, f(xi));
+
+        if (count == N)
+        {
+            printf("\nReached %d iterations.", N);
+            printf("\n0-exit  1-another N iterations  2-continue\n>");
+            scanf("%d", &answer);
+
+            if (answer == 0)
+                exit(0);
+            else if (answer == 1)
+                count = 0;
+            else if (answer == 2)
+                N = -1;
+            else
+            {
+                printf("Wrong answer.");
+                exit(1);
+            }
+        }
+
+    } while (fabs(X1 - X2) > eps);
+
+    *pRoot = xi;
+}
+
+// ------------------ Метод НЬЮТОНА ----------------------------
+
+void method_Newton(double *pRoot, double X0, int N, int debug)
+{
+    double xi = X0;
+    int n = 0, count = 0, answer;
+
+    do
+    {
+        n++;
+        count++;
+
+        xi = X0 - f(X0) / df(X0);
+
+        if (debug)
+            printf("\nn=%d  xi=%.10lf   f(xi)=%.10lf", n, xi, f(xi));
+
+        X0 = xi;
+
+        if (count == N)
+        {
+            printf("\nReached %d iterations.", N);
+            printf("\n0-exit  1-another N iterations  2-continue\n>");
+            scanf("%d", &answer);
+
+            if (answer == 0)
+                exit(0);
+            else if (answer == 1)
+                count = 0;
+            else if (answer == 2)
+                N = -1;
+            else
+            {
+                printf("Wrong answer.");
+                exit(1);
+            }
+        }
+
+    } while (fabs(f(xi)) > eps);
+
+    *pRoot = xi;
+}
