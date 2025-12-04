@@ -1,0 +1,171 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// =========================================================
+// ПРОТОТИПИ ФУНКЦІЙ (Оголошення)
+// =========================================================
+
+// Головна функція виконання завдання (за умовою повинна бути окремою функцією)
+void executeVariant15(int N, int **A, int **B);
+
+// Допоміжна функція: Сортування рядків матриці (Bubble Sort)
+void sortRows(int **Mat, int N);
+
+// Допоміжна функція: Сортування стовбців матриці (Bubble Sort)
+void sortCols(int **Mat, int N);
+
+// Допоміжна функція: Виведення матриці на екран
+void printMatrix(int **Mat, int N, const char *name);
+
+// Допоміжна функція: Виділення пам'яті під матрицю
+int** allocateMatrix(int N);
+
+// Допоміжна функція: Звільнення пам'яті
+void freeMatrix(int **Mat, int N);
+
+
+// =========================================================
+// ГОЛОВНА ФУНКЦІЯ (Entry Point)
+// =========================================================
+int main() {
+    int N;
+    int **A = NULL;
+    int **B = NULL;
+
+    // Ініціалізація генератора випадкових чисел
+    srand(time(NULL));
+
+    // Введення розміру
+    printf("Enter matrix size N: ");
+    if (scanf("%d", &N) != 1 || N <= 0) {
+        printf("Error: N must be a positive integer.\n");
+        return 1;
+    }
+
+    // Виділення пам'яті
+    A = allocateMatrix(N);
+    B = allocateMatrix(N);
+
+    if (A == NULL || B == NULL) {
+        printf("Memory allocation error.\n");
+        return 1;
+    }
+
+    // Виконання завдання
+    executeVariant15(N, A, B);
+
+    // Звільнення пам'яті перед виходом
+    freeMatrix(A, N);
+    freeMatrix(B, N);
+
+    // Затримка екрану (щоб консоль не закрилась миттєво)
+    printf("\nPress Enter to exit...");
+    getchar(); 
+    getchar();
+
+    return 0;
+}
+
+// =========================================================
+// РЕАЛІЗАЦІЯ ФУНКЦІЙ
+// =========================================================
+
+void executeVariant15(int N, int **A, int **B) {
+    // 1. Генерація параметра 'a' (діапазон 30...55)
+    // Формула: rand() % (max - min + 1) + min
+    int a_param = 30 + rand() % (55 - 30 + 1);
+    
+    printf("\n[INFO] Generated parameter a = %d\n", a_param);
+    printf("[INFO] Value range: [%d ... %d]\n\n", -a_param, a_param);
+
+    // 2. Заповнення матриці А випадковими числами та копіювання в В
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            // Генерація числа від -a_param до a_param
+            A[i][j] = (rand() % (2 * a_param + 1)) - a_param;
+            
+            // Копіюємо в В, бо саме над В будуть проводитись маніпуляції
+            B[i][j] = A[i][j];
+        }
+    }
+
+    // Виведення початкової матриці А
+    printMatrix(A, N, "Matrix A (Initial)");
+
+    // 3. Сортування рядків матриці В за зростанням
+    sortRows(B, N);
+    
+    // 4. Сортування стовбців матриці В за зростанням
+    sortCols(B, N);
+
+    // Виведення результуючої матриці В
+    printMatrix(B, N, "Matrix B (Sorted Rows then Cols)");
+}
+
+void sortRows(int **Mat, int N) {
+    for (int i = 0; i < N; i++) {
+        // Сортуємо i-й рядок методом бульбашки
+        for (int step = 0; step < N - 1; step++) {
+            for (int j = 0; j < N - step - 1; j++) {
+                if (Mat[i][j] > Mat[i][j + 1]) {
+                    int temp = Mat[i][j];
+                    Mat[i][j] = Mat[i][j + 1];
+                    Mat[i][j + 1] = temp;
+                }
+            }
+        }
+    }
+}
+
+void sortCols(int **Mat, int N) {
+    for (int j = 0; j < N; j++) { // Проходимо по стовбцях (індекс j)
+        // Сортуємо елементи всередині стовбця (змінюється індекс рядка k)
+        for (int step = 0; step < N - 1; step++) {
+            for (int k = 0; k < N - step - 1; k++) {
+                // Порівнюємо поточний елемент з нижнім сусідом
+                if (Mat[k][j] > Mat[k + 1][j]) {
+                    int temp = Mat[k][j];
+                    Mat[k][j] = Mat[k + 1][j];
+                    Mat[k + 1][j] = temp;
+                }
+            }
+        }
+    }
+}
+
+void printMatrix(int **Mat, int N, const char *name) {
+    printf("%s:\n", name);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%5d ", Mat[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+int** allocateMatrix(int N) {
+    int **Mat = (int **)malloc(N * sizeof(int *));
+    if (Mat != NULL) {
+        for (int i = 0; i < N; i++) {
+            Mat[i] = (int *)malloc(N * sizeof(int));
+            // Якщо не вдалося виділити пам'ять під рядок - очищуємо все
+            if (Mat[i] == NULL) {
+                while (--i >= 0) free(Mat[i]);
+                free(Mat);
+                return NULL;
+            }
+        }
+    }
+    return Mat;
+}
+
+void freeMatrix(int **Mat, int N) {
+    if (Mat != NULL) {
+        for (int i = 0; i < N; i++) {
+            free(Mat[i]);
+        }
+        free(Mat);
+    }
+}
