@@ -5,15 +5,15 @@
 // --- ПРОТОТИПИ ФУНКЦІЙ ---
 
 // Робота з пам'яттю
-int** create_matrix(int rows, int cols);  // Прототип функції для створення матриці
-void free_matrix(int** matrix, int rows);  // Прототип функції для звільнення пам'яті
+int** create_matrix(int rows, int cols);  
+void free_matrix(int** matrix, int rows);  
 
 // Заповнення та вивід
-void fill_matrix_random(int** matrix, int rows, int cols);  // Прототип для заповнення матриці випадковими числами
-void fill_matrix_user(int** matrix, int rows, int cols);  // Прототип для заповнення матриці вручну
-void print_matrix(int** matrix, int rows, int cols, const char* name);  // Прототип для виведення матриці на екран
+void fill_matrix_random(int** matrix, int rows, int cols);  
+void fill_matrix_user(int** matrix, int rows, int cols);  
+void print_matrix(int** matrix, int rows, int cols, const char* name);  
 
-// Завдання лабораторної
+
 void task_max_min_diagonal(int** A, int n_a, int variant);  // Прототип для пошуку максимальних і мінімальних елементів відносно діагоналі
 int** task_transpose_b(int** B, int rows, int cols);  // Прототип для транспонування матриці
 int** task_multiply_matrices(int** A, int rows_a, int cols_a, int** B, int rows_b, int cols_b);  // Прототип для множення матриць
@@ -23,72 +23,70 @@ void task_calc_sums(int** A, int rows_a, int cols_a, int** B, int rows_b, int co
 // --- ГОЛОВНА ФУНКЦІЯ ---
 int main() {
     srand(time(NULL));  // Ініціалізація генератора випадкових чисел
-    int **MatrixA = NULL;  // Вказівник на першу матрицю A
-    int **MatrixB = NULL;  // Вказівник на другу матрицю B
-    int **MatrixResult = NULL;  // Вказівник на результат виконання операцій (множення, транспонування тощо)
+    int **MatrixA = NULL;  
+    int **MatrixB = NULL;  
+    int **MatrixResult = NULL;  // Вказівник на результат виконання операцій
     
-    int Na, Nb, Mb;  // Розміри матриць
-    int variant;  // Змінна для вибору варіанту завдання
-    int choice;  // Змінна для вибору операції з меню
+    int Na, Nb, Mb;  
+    int variant;  
+    int choice; 
 
     // Введення параметрів
     printf("Enter your variant number: ");
-    scanf("%d", &variant);  // Вводимо номер варіанту для завдання
+    scanf("%d", &variant);  /
 
     printf("Enter size for Matrix A (Na x Na): ");
-    scanf("%d", &Na);  // Вводимо розмір першої матриці (квадратна матриця)
+    scanf("%d", &Na);  // квадратна матриця
 
     printf("Enter rows for Matrix B (Nb): ");
-    scanf("%d", &Nb);  // Вводимо кількість рядків для другої матриці
+    scanf("%d", &Nb);  // кількість рядків 
 
     printf("Enter cols for Matrix B (Mb): ");
-    scanf("%d", &Mb);  // Вводимо кількість стовпців для другої матриці
+    scanf("%d", &Mb);  // кількість стовпців 
 
-    // 1. Виділення пам'яті
-    MatrixA = create_matrix(Na, Na);  // Виділяємо пам'ять для матриці A
-    MatrixB = create_matrix(Nb, Mb);  // Виділяємо пам'ять для матриці B
+    // Виділення пам'яті
+    MatrixA = create_matrix(Na, Na);  
+    MatrixB = create_matrix(Nb, Mb);  
 
-    // Перевірка успішності виділення пам'яті
     if (!MatrixA || !MatrixB) {
         printf("Memory allocation failed!\n");
-        return 1;  // Якщо пам'ять не вдалося виділити, вивести помилку і завершити програму
+        return 1;  
     }
 
-    // Початкове заповнення
+    
     printf("\n--- Filling Matrix A ---\n");
-    // Можна замінити на fill_matrix_user для ручного введення
-    fill_matrix_random(MatrixA, Na, Na);  // Заповнюємо матрицю A випадковими числами
+    fill_matrix_random(MatrixA, Na, Na);  
     
     printf("\n--- Filling Matrix B ---\n");
-    fill_matrix_random(MatrixB, Nb, Mb);  // Заповнюємо матрицю B випадковими числами
+    fill_matrix_random(MatrixB, Nb, Mb); 
 
     // Головне меню
     do {
         printf("\n\n=== MENU ===\n");
-        printf("1. Show Matrices\n");  // Вивести матриці
-        printf("2. Find Max/Min relative to diagonal (Task 1)\n");  // Завдання 1: Макс/мін відносно діагоналі
-        printf("3. Transpose Matrix B (Task 2)\n");  // Завдання 2: Транспонування
-        printf("4. Multiply A * B (Task 3)\n");  // Завдання 3: Множення матриць
-        printf("5. Sort Matrix A rows (Task 4)\n");  // Завдання 4: Сортування рядків матриці A
-        printf("6. Calculate Sums (Task 5)\n");  // Завдання 5: Суми рядків і стовпців
-        printf("0. Exit\n");  // Вихід
+        printf("1. Show Matrices\n");  
+        printf("2. Find Max/Min relative to diagonal (Task 1)\n");  // Макс/мін відносно діагоналі
+        printf("3. Transpose Matrix B (Task 2)\n");  // Транспонування
+        printf("4. Multiply A * B (Task 3)\n");  // Множення матриць
+        printf("5. Sort Matrix A rows (Task 4)\n");  // Сортування рядків матриці A
+        printf("6. Calculate Sums (Task 5)\n");  // Суми рядків і стовпців
+        printf("0. Exit\n");  
         printf("Choice: ");
         scanf("%d", &choice);  // Вводимо вибір операції
 
-        switch (choice) {  // Вибір операції
+        switch (choice) {  
             case 1:
-                print_matrix(MatrixA, Na, Na, "A");  // Виводимо матрицю A
-                print_matrix(MatrixB, Nb, Mb, "B");  // Виводимо матрицю B
+                print_matrix(MatrixA, Na, Na, "A");  
+                print_matrix(MatrixB, Nb, Mb, "B"); 
                 break;
             case 2:
-                task_max_min_diagonal(MatrixA, Na, variant);  // Завдання 1: Макс/мін відносно діагоналі
+                task_max_min_diagonal(MatrixA, Na, variant);  
                 break;
             case 3:
-                if (MatrixResult) free_matrix(MatrixResult, Mb);  // Звільняємо пам'ять від попереднього результату, якщо він є
-                MatrixResult = task_transpose_b(MatrixB, Nb, Mb);  // Транспонування матриці B
+                if (MatrixResult) free_matrix(MatrixResult, Mb);  
+                MatrixResult = task_transpose_b(MatrixB, Nb, Mb);  
                 printf("Matrix B transposed result:\n");
-                print_matrix(MatrixResult, Mb, Nb, "B_Transposed");  // Виводимо транспоновану матрицю
-                free_matrix(MatrixResult, Mb);  // Звільняємо пам'ять після використання
+                print_matrix(MatrixResult, Mb, Nb, "B_Transposed");  
+                free_matrix(MatrixResult, Mb);  
                 MatrixResult = NULL;
                 break;
             case 4:
@@ -96,64 +94,62 @@ int main() {
                     printf("Error: Matrix multiplication impossible! Cols of A (%d) != Rows of B (%d)\n", Na, Nb);
                 } else {
                     if (MatrixResult) free_matrix(MatrixResult, Na);  // Звільняємо пам'ять попереднього результату
-                    MatrixResult = task_multiply_matrices(MatrixA, Na, Na, MatrixB, Nb, Mb);  // Множимо матриці A і B
+                    MatrixResult = task_multiply_matrices(MatrixA, Na, Na, MatrixB, Nb, Mb);  
                     printf("Multiplication Result (A * B):\n");
-                    print_matrix(MatrixResult, Na, Mb, "A*B");  // Виводимо результат множення
-                    free_matrix(MatrixResult, Na);  // Звільняємо пам'ять після використання
+                    print_matrix(MatrixResult, Na, Mb, "A*B");  
+                    free_matrix(MatrixResult, Na);  
                     MatrixResult = NULL;
                 }
                 break;
             case 5:
-                task_sort_rows(MatrixA, Na, Na);  // Завдання 4: Сортування рядків матриці A
+                task_sort_rows(MatrixA, Na, Na);  
                 printf("Matrix A after sorting rows:\n");
-                print_matrix(MatrixA, Na, Na, "A");  // Виводимо матрицю A після сортування
+                print_matrix(MatrixA, Na, Na, "A");  
                 break;
             case 6:
-                task_calc_sums(MatrixA, Na, Na, MatrixB, Nb, Mb);  // Завдання 5: Обчислення сум елементів
+                task_calc_sums(MatrixA, Na, Na, MatrixB, Nb, Mb);  
                 break;
             case 0:
-                printf("Exiting...\n");  // Вихід з програми
+                printf("Exiting...\n");  
                 break;
             default:
-                printf("Invalid choice!\n");  // Помилка, якщо вибір некоректний
+                printf("Invalid choice!\n"); 
         }
 
-    } while (choice != 0);  // Поки не вибрано 0 для виходу з програми
+    } while (choice != 0); 
 
-    // Звільнення пам'яті перед виходом
-    free_matrix(MatrixA, Na);  // Звільняємо пам'ять для матриці A
-    free_matrix(MatrixB, Nb);  // Звільняємо пам'ять для матриці B
-    if (MatrixResult) free_matrix(MatrixResult, Na);  // Звільняємо пам'ять для результату, якщо він існує
+    free_matrix(MatrixA, Na); 
+    free_matrix(MatrixB, Nb); 
+    if (MatrixResult) free_matrix(MatrixResult, Na);  
 
-    return 0;  // Завершення програми
+    return 0; 
 }
 
 // --- РЕАЛІЗАЦІЯ ФУНКЦІЙ ---
 
-// Виділення пам'яті для двовимірного масиву (int**)
+// Виділення пам'яті для двовимірного масиву 
 int** create_matrix(int rows, int cols) {
-    int** matrix = (int**)malloc(rows * sizeof(int*));  // Виділяємо пам'ять для масиву рядків
-    if (!matrix) return NULL;  // Якщо не вдалося виділити пам'ять для рядків, повертаємо NULL
+    int** matrix = (int**)malloc(rows * sizeof(int*));  
+    if (!matrix) return NULL;  
     
     for (int i = 0; i < rows; i++) {
-        matrix[i] = (int*)malloc(cols * sizeof(int));  // Виділяємо пам'ять для кожного рядка
-        if (!matrix[i]) {  // Якщо не вдалося виділити пам'ять для рядка
-            // Очищення пам'яті, якщо сталася помилка
+        matrix[i] = (int*)malloc(cols * sizeof(int));  
+        if (!matrix[i]) {  
             for (int j = 0; j < i; j++) free(matrix[j]);
             free(matrix);
             return NULL;
         }
     }
-    return matrix;  // Повертаємо вказівник на створену матрицю
+    return matrix; // Повертаємо вказівник на матрицю
 }
 
 // Звільнення пам'яті
 void free_matrix(int** matrix, int rows) {
-    if (!matrix) return;  // Якщо матриця не існує, нічого не робимо
+    if (!matrix) return;  
     for (int i = 0; i < rows; i++) {
-        free(matrix[i]);  // Звільняємо пам'ять для кожного рядка
+        free(matrix[i]); 
     }
-    free(matrix);  // Звільняємо пам'ять для самого масиву рядків
+    free(matrix);  
 }
 
 // Заповнення випадковими числами
@@ -167,16 +163,16 @@ void fill_matrix_random(int** matrix, int rows, int cols) {
 
 // Вивід матриці на екран
 void print_matrix(int** matrix, int rows, int cols, const char* name) {
-    printf("Matrix %s [%dx%d]:\n", name, rows, cols);  // Виводимо назву матриці та її розміри
+    printf("Matrix %s [%dx%d]:\n", name, rows, cols);  
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            printf("%5d ", matrix[i][j]);  // Виводимо елементи матриці з вирівнюванням
+            printf("%5d ", matrix[i][j]); 
         }
-        printf("\n");  // Перехід на новий рядок після виведення всіх елементів одного рядка
+        printf("\n");  
     }
 }
 
-// Завдання 1: Макс/Мін відносно діагоналі
+// Макс/Мін відносно діагоналі
 void task_max_min_diagonal(int** A, int n_a, int variant) {
     int max_val, min_val;
     int first = 1; // прапор першого проходження
@@ -213,10 +209,9 @@ void task_max_min_diagonal(int** A, int n_a, int variant) {
     }
 }
 
-// Завдання 2: Транспонування
+// Транспонування
 int** task_transpose_b(int** B, int rows, int cols) {
-    // Нова матриця має обернені розміри
-    int** T = create_matrix(cols, rows);  // Створюємо нову матрицю для транспонованого результату
+    int** T = create_matrix(cols, rows);  
     
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -226,23 +221,21 @@ int** task_transpose_b(int** B, int rows, int cols) {
     return T;  // Повертаємо транспоновану матрицю
 }
 
-// Завдання 3: Множення матриць
+// Множення матриць
 int** task_multiply_matrices(int** A, int rows_a, int cols_a, int** B, int rows_b, int cols_b) {
-    // Результуюча матриця має розмір Rows_A x Cols_B
-    int** C = create_matrix(rows_a, cols_b);  // Створюємо нову матрицю для результату множення
+    int** C = create_matrix(rows_a, cols_b); 
     
     for (int i = 0; i < rows_a; i++) {
         for (int j = 0; j < cols_b; j++) {
             C[i][j] = 0;
             for (int k = 0; k < cols_a; k++) {
-                C[i][j] += A[i][k] * B[k][j];  // Обчислюємо елементи результату множення
+                C[i][j] += A[i][k] * B[k][j];  
             }
         }
     }
     return C;  // Повертаємо результат множення матриць
 }
 
-// Завдання 4: Сортування рядків бульбашкою
 void task_sort_rows(int** A, int rows, int cols) {
     for (int i = 0; i < rows; i++) {
         // Сортуємо кожен рядок окремо
@@ -258,7 +251,7 @@ void task_sort_rows(int** A, int rows, int cols) {
     }
 }
 
-// Завдання 5: Суми рядків A та стовпців B
+//  Суми рядків A та стовпців B
 void task_calc_sums(int** A, int rows_a, int cols_a, int** B, int rows_b, int cols_b) {
     printf("\nSum of rows in Matrix A:\n");
     for (int i = 0; i < rows_a; i++) {
