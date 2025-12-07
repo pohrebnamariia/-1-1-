@@ -1,32 +1,32 @@
 #include <stdio.h>
-#include <math.h>  
 
 int main() {
     int N;
     double a, S = 0;
 
-  
-    printf("Enter the value of a: ");
-    scanf("%lf", &a);  
-    printf("Enter the value of N (N >= 1): ");
+    printf("Enter a: ");
+    scanf("%lf", &a);
+
+    printf("Enter N (N >= 1): ");
     scanf("%d", &N);
 
     if (N < 1) {
-        printf("N must be greater than or equal to 1.\n");
-        return 1;  
+        printf("N must be >= 1\n");
+        return 1;
     }
 
-  
+    double power = 1;  // тут буде a^n, починаємо з a^0 = 1
+
     for (int n = 1; n <= N; n++) {
-        double term = pow(a, n) / n;  // a^n / n
-        if (n % 2 == 1) {
-            S += term; 
-        } else {
-            S -= term; 
-        }
+        power *= a;        // тепер power = a^n (бо множимо на a)
+        double term = power / n;
+
+        if (n % 2 == 1)
+            S += term;     // непарні — плюс
+        else
+            S -= term;     // парні — мінус
     }
 
-    printf("Sum of the series: %.6f\n", S);
-
+    printf("Sum = %.6f\n", S);
     return 0;
 }
