@@ -2,41 +2,23 @@
 #include <stdlib.h>
 #include <time.h>
 
-// =========================================================
-// ПРОТОТИПИ ФУНКЦІЙ (Оголошення)
-// =========================================================
+// ПРОТОТИПИ ФУНКЦІЙ
 
-// Головна функція виконання завдання (за умовою повинна бути окремою функцією)
 void executeVariant15(int N, int **A, int **B);
-
-// Допоміжна функція: Сортування рядків матриці (Bubble Sort)
 void sortRows(int **Mat, int N);
-
-// Допоміжна функція: Сортування стовбців матриці (Bubble Sort)
 void sortCols(int **Mat, int N);
-
-// Допоміжна функція: Виведення матриці на екран
 void printMatrix(int **Mat, int N, const char *name);
-
-// Допоміжна функція: Виділення пам'яті під матрицю
 int** allocateMatrix(int N);
-
-// Допоміжна функція: Звільнення пам'яті
 void freeMatrix(int **Mat, int N);
 
 
-// =========================================================
-// ГОЛОВНА ФУНКЦІЯ (Entry Point)
-// =========================================================
+// ГОЛОВНА ФУНКЦІЯ
 int main() {
     int N;
     int **A = NULL;
     int **B = NULL;
-
-    // Ініціалізація генератора випадкових чисел
     srand(time(NULL));
 
-    // Введення розміру
     printf("Enter matrix size N: ");
     if (scanf("%d", &N) != 1 || N <= 0) {
         printf("Error: N must be a positive integer.\n");
@@ -52,14 +34,11 @@ int main() {
         return 1;
     }
 
-    // Виконання завдання
     executeVariant15(N, A, B);
 
-    // Звільнення пам'яті перед виходом
     freeMatrix(A, N);
     freeMatrix(B, N);
 
-    // Затримка екрану (щоб консоль не закрилась миттєво)
     printf("\nPress Enter to exit...");
     getchar(); 
     getchar();
@@ -67,19 +46,16 @@ int main() {
     return 0;
 }
 
-// =========================================================
 // РЕАЛІЗАЦІЯ ФУНКЦІЙ
-// =========================================================
 
 void executeVariant15(int N, int **A, int **B) {
-    // 1. Генерація параметра 'a' (діапазон 30...55)
-    // Формула: rand() % (max - min + 1) + min
+    // Генерація параметра 'a' (діапазон 30...55)
     int a_param = 30 + rand() % (55 - 30 + 1);
     
-    printf("\n[INFO] Generated parameter a = %d\n", a_param);
-    printf("[INFO] Value range: [%d ... %d]\n\n", -a_param, a_param);
+    printf("\n Generated parameter a = %d\n", a_param);
+    printf(" Value range: [%d ... %d]\n\n", -a_param, a_param);
 
-    // 2. Заповнення матриці А випадковими числами та копіювання в В
+    // Заповнення матриці А випадковими числами та копіювання в В
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             // Генерація числа від -a_param до a_param
